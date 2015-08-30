@@ -1,3 +1,6 @@
+require_relative 'support/controller_helpers'
+require 'devise'
+
 if ENV.fetch("COVERAGE", false)
   require "simplecov"
   SimpleCov.start "rails"
@@ -18,6 +21,13 @@ RSpec.configure do |config|
 
   config.example_status_persistence_file_path = "tmp/rspec_examples.txt"
   config.order = :random
+
+  config.include ControllerHelpers, type: :controller
+  Warden.test_mode!
+
+  config.after do
+    Warden.test_reset!
+  end
 end
 
 WebMock.disable_net_connect!(allow_localhost: true)
